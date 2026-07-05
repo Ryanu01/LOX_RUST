@@ -19,6 +19,7 @@ pub enum Expression {
     }
 }
 
+#[allow(unused)]
 pub enum LiteralValue {
     Number(f64),
     String(String),
@@ -26,11 +27,13 @@ pub enum LiteralValue {
     Nil,
 }
 
+#[allow(unused)]
 pub enum UnaryOperator {
     Bang,
     Minus
 }
 
+#[allow(unused)]
 pub enum BinaryOperator {
     EqualEqual,
     BangEqual,

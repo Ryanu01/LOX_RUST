@@ -18,8 +18,9 @@ impl fmt::Display for LexerError {
     }
 }
 
+#[allow(unused)]
 #[derive(Debug)]
-enum TokenType {
+pub enum TokenType {
     Eof,
     // Single-character tokens.
     LeftParen,
@@ -70,10 +71,11 @@ type LexerResult<T> = std::result::Result<T, LexerError>;
 type Source<'s> = Peekable<Chars<'s>>;
 
 #[derive(Debug)]
+#[allow(unused)]
 pub struct Token {
-    token_type: TokenType,
-    lexeme: String,
-    line: usize,
+    pub token_type: TokenType,
+    pub lexeme: String,
+    pub line: usize,
 }
 
 struct Lexer<'s> {
@@ -92,10 +94,10 @@ pub fn scan_tokens(source: String) -> LexerResult<Vec<Token>> {
         tokens.push(token);
     }
 
-    tokens.push(Token { 
-        token_type: TokenType::Eof, 
-        lexeme: "".to_string(), 
-        line: lexer.current_line 
+    tokens.push(Token {
+        token_type: TokenType::Eof,
+        lexeme: "".to_string(),
+        line: lexer.current_line,
     });
 
     Ok(tokens)

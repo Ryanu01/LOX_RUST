@@ -5,6 +5,7 @@ pub struct Lox {
 }
 
 impl Lox {
+    #[allow(unused)]
     pub fn new () -> Lox {
         Lox {
             had_error: false 
@@ -30,6 +31,7 @@ impl Lox {
         self.had_error
     }
 
+    #[allow(unused)]
     fn error(&mut self, line: usize, message: &str) {
         self.report(line, "", message);
     }
