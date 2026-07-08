@@ -1,25 +1,27 @@
+#[derive(Debug)]
 pub enum Expression {
     Literal {
-        value: LiteralValue
+        value: LiteralValue,
     },
 
     Unary {
         operator: UnaryOperator,
-        expression: Box<Expression>
+        expression: Box<Expression>,
     },
 
     Binary {
         left: Box<Expression>,
         operator: BinaryOperator,
-        right: Box<Expression>
+        right: Box<Expression>,
     },
 
     Grouping {
-        expression: Box<Expression>
-    }
+        expression: Box<Expression>,
+    },
 }
 
 #[allow(unused)]
+#[derive(Debug)]
 pub enum LiteralValue {
     Number(f64),
     String(String),
@@ -28,12 +30,14 @@ pub enum LiteralValue {
 }
 
 #[allow(unused)]
+#[derive(Debug)]
 pub enum UnaryOperator {
     Bang,
-    Minus
+    Minus,
 }
 
 #[allow(unused)]
+#[derive(Debug)]
 pub enum BinaryOperator {
     EqualEqual,
     BangEqual,
@@ -44,5 +48,6 @@ pub enum BinaryOperator {
     Minus,
     Plus,
     Slash,
-    Star
+    Star,
 }
+

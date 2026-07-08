@@ -11,6 +11,11 @@ pub struct Parser {
 type ParseError = String;
 type ParseResult<T> = Result<T, ParseError>;
 
+pub fn parse_tokens(tokens: Vec<Token>) -> ParseResult<Expression> {
+    let mut parser = Parser::new(tokens);
+    parser.expression()
+}
+
 impl Parser {
     pub fn new(tokens: Vec<Token>) -> Self {
         Parser { tokens, current: 0 }
@@ -122,19 +127,6 @@ impl Parser {
     }
 
     fn primary(&mut self) -> ParseResult<Expression> {
-        if matches!(self.peek().token_type, TokenType::LeftParen) {
-            self.advance();
-            let expr = self.expression()?;
-            if matches!(self.peek().token_type, TokenType::RightParen) {
-                self.advance();
-                return Ok(Expression::Grouping {
-                    expression: Box::new(expr),
-                });
-            } else {
-                return Err(format!("Expected: ')', got: {}", self.peek().lexeme));
-            }
-        }
-
         let literal = match &self.peek().token_type {
             TokenType::False => LiteralValue::Boolean(false),
             TokenType::True => LiteralValue::Boolean(true),
@@ -143,8 +135,26 @@ impl Parser {
             TokenType::String(str) => LiteralValue::String(str.clone()),
             _ => return Err(format!("Unexpected token: {}", self.peek().lexeme)),
         };
-
+        self.advance();
         return Ok(Expression::Literal { value: literal });
+    }
+
+    fn grouping(&mut self) -> ParseResult<Expression> {
+        if matches!(self.peek().token_type, TokenType::LeftParen) {
+            self.advance();
+            let expr = self.expression()?;
+
+            if matches!(self.peek().token_type, TokenType::RightParen) {
+                self.advance();
+                return Ok(Expression::Grouping {
+                    expression: Box::new(expr),
+                });
+            } else {
+                return Err(format!("Expected ')' got: {}", self.peek().lexeme));
+            }
+        } else {
+            return Err(format!("Unexpected token: {}", self.peek().lexeme));
+        }
     }
 
     fn is_at_end(&self) -> bool {

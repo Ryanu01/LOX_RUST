@@ -1,30 +1,32 @@
-use crate::scanner;
+use crate::{parser::parse_tokens, scanner};
 
 pub struct Lox {
-    had_error: bool
+    had_error: bool,
 }
 
 impl Lox {
     #[allow(unused)]
-    pub fn new () -> Lox {
-        Lox {
-            had_error: false 
-        }
+    pub fn new() -> Lox {
+        Lox { had_error: false }
     }
 
-    pub fn run (&mut self, source: &str) {
-        self.had_error =  false;
+    pub fn run(&mut self, source: &str) {
+        self.had_error = false;
         let tokens = scanner::scan_tokens(source.to_string());
         match tokens {
             Ok(tokens) => {
                 println!("{:?}", tokens);
+                match parse_tokens(tokens) {
+                    Ok(expr) => {
+                        println!("{:#?}", expr);
+                    }
+                    Err(err) => self.error(0, &err),
+                }
             }
             Err(lexer_error) => {
                 self.report(lexer_error.line, &lexer_error.lexeme, &lexer_error.message);
             }
         }
-
-        
     }
 
     pub fn had_error(&self) -> bool {
@@ -41,3 +43,4 @@ impl Lox {
         self.had_error = true;
     }
 }
+
