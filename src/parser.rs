@@ -21,8 +21,22 @@ impl Parser {
         Parser { tokens, current: 0 }
     }
 
+    fn fallback(&mut self) -> ParseResult<Expression> {
+        match self.peek().token_type {
+            TokenType::Eof => Err("Unexpected EOF".to_string()),
+            _ => Err(format!("Unexpected token: {}", self.peek().lexeme)),
+        }
+    }
+
     fn expression(&mut self) -> ParseResult<Expression> {
-        return self.equality();
+        let expr = self.equality()?;
+        match self.peek().token_type {
+            TokenType::Eof => Ok(expr),
+            _ => Err(format!(
+                "Unexpected token: {}, EOF expected",
+                self.peek().lexeme
+            )),
+        }
     }
 
     fn equality(&mut self) -> ParseResult<Expression> {
@@ -153,7 +167,7 @@ impl Parser {
                 return Err(format!("Expected ')' got: {}", self.peek().lexeme));
             }
         } else {
-            return Err(format!("Unexpected token: {}", self.peek().lexeme));
+            self.fallback()
         }
     }
 
