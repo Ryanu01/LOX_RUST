@@ -5,10 +5,10 @@ use std::io::Write;
 use std::process;
 mod ast;
 mod ast_formater;
-mod interpreter;
 mod parser;
+mod runner;
 mod scanner;
-use interpreter::Lox;
+use runner::Lox;
 fn main() {
     // let args: Vec<String> = env::args().collect();
     // let mut lox = Lox::new();
